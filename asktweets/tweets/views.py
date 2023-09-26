@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from django.http import JsonResponse
 
-# Create your views here.
+def json_response(request):
+    return JsonResponse({'foot':'bart'})
