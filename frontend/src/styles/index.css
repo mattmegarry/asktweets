@@ -1,0 +1,83 @@
+@import "./reset.css";
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* layout */
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(ellipse at left, #fa5858, transparent),
+    radial-gradient(ellipse at bottom, #df8c8c, transparent);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrap {
+  width: 100%;
+  height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1000px;
+  padding: 0 20px;
+}
+
+header {
+  width: 100%;
+  height: 15vh;
+  color: white;
+  padding: 20px 0;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  color: black;
+  padding: 20px 0;
+}
+
+footer {
+  width: 100%;
+  height: 15vh;
+  color: white;
+  padding: 20px 0;
+}
+
+/* end layout */
+
+/* components */
+.header-nav-item {
+  border: solid 4px white;
+  text-align: center;
+  padding: 10px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.header-content h1 {
+  font-size: 6rem;
+  font-weight: 300;
+  margin-bottom: -14px; /* to align with the bottom of the nav items 4px + 10px */
+}
+
+/* end components */
