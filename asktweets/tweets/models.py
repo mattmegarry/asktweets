@@ -12,8 +12,8 @@ class Party(models.Model):
 class MP(models.Model):
     name = models.CharField(max_length=600, blank=False, null=False)
     party = models.ForeignKey(Party, on_delete=models.SET_NULL, null=True)
-    constituency = models.CharField(max_length=600)
-    twitter_handle = models.CharField(max_length=255)
+    constituency = models.CharField(max_length=600, null=True, blank=True)
+    twitter_handle = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "MPs"
