@@ -25,12 +25,17 @@ with open('scripts/mps.csv') as csvfile:
             Party.objects.create(name=party)
 
         name = row[headers.index('Name')]
+        party = Party.objects.get(name=row[headers.index('Party')])
+        constituency = row[headers.index('Constituency')]
+        twitter_handle = row[headers.index('Twitter Handle')]
         if name.startswith('Mr ') or name.startswith('Ms '):
             name = name[3:]
         if name.startswith('Mrs ') or name.startswith('Sir '):
-            name = name[4:]    
-        party = Party.objects.get(name=row[headers.index('Party')])
-        MP.objects.create(name=name, party=party, constituency=row[headers.index('Constituency')], twitter_handle=row[headers.index('Twitter Handle')])
+            name = name[4:]
+        if twitter_handle.startswith('https://twitter.com/'):
+            twitter_handle = twitter_handle[20:]
+            
+        MP.objects.create(name=name, party=party, constituency=constituency, twitter_handle=twitter_handle)
 
 print("Script finished running.")
 
