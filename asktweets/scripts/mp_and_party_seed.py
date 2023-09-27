@@ -1,20 +1,37 @@
 import os
 import django
 from django.conf import settings
-
+import csv
 import sys
-sys.path.append('../asktweets') 
 
+# This script is intended to be run on an empty database #
+
+sys.path.append('../asktweets') 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'asktweets.settings')
+os.environ['DJANGO_DEBUG'] = "true"
 django.setup()
 
 from tweets.models import MP, Party
 
-conservative = Party.objects.create(name="Conservative") 
-labour = Party.objects.create(name="Labour")
+parties = []
 
-MP.objects.create(name="John Doelll", party=conservative)
-MP.objects.create(name="Jane Doepppp", party=labour)
+with open('scripts/mps.csv') as csvfile:  
+    reader = csv.reader(csvfile)
+    headers = next(reader)
+    for row in reader:
+        if row[headers.index('Party')] not in parties:
+            party = row[headers.index('Party')]
+            parties.append(party)
+            Party.objects.create(name=party)
 
-print("Created parties and sample MPs")
+        name = row[headers.index('Name')]
+        if name.startswith('Mr ') or name.startswith('Ms '):
+            name = name[3:]
+        if name.startswith('Mrs ') or name.startswith('Sir '):
+            name = name[4:]    
+        party = Party.objects.get(name=row[headers.index('Party')])
+        MP.objects.create(name=name, party=party, constituency=row[headers.index('Constituency')], twitter_handle=row[headers.index('Twitter Handle')])
+
+print("Script finished running.")
+
 
