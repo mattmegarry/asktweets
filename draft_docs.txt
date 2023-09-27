@@ -1,3 +1,5 @@
 Activating the virtual environment
 
 Running the MP & Party Seed Script
+(activate venv and cd to /asktweets)
+python scripts/mp_and_party_seed.py
