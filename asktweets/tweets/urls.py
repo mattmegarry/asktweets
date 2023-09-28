@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from .views import ListMPs
 
 urlpatterns = [
-    path('json-response', views.json_response, name='testing'),
+    path('mps', ListMPs.as_view(), name='mps'),
 ]

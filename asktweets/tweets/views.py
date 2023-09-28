@@ -1,5 +1,11 @@
-from rest_framework import viewsets
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-def json_response(request):
-    return JsonResponse({'foot':'bart'})
+from .models import MP
+from .serializers import MPSerializer, PartySerializer
+
+class ListMPs(APIView):
+    def get(self, request, format=None):
+        MPs = MP.objects.all()
+        serializer = MPSerializer(MPs, many=True)
+        return Response(serializer.data)
