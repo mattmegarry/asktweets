@@ -8,8 +8,12 @@ class PartySerializer(serializers.ModelSerializer):
 
 class MPSerializer(serializers.ModelSerializer):
     party = serializers.StringRelatedField()
+    label = serializers.SerializerMethodField()
 
     class Meta:
         model = MP
-        fields = ['id', 'name', 'party', 'constituency']
+        fields = ['id', 'name', 'party', 'constituency', 'label']
+
+    def get_label(self, obj):
+        return f"{obj.name} - {obj.constituency}"
 
