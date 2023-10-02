@@ -1,11 +1,21 @@
-from django.contrib import admin
-
+from django.contrib import admin, messages
+from django.utils.html import format_html, mark_safe
 from .models import MP, Party, Tweet, ClaudeAPIKey, ApifyAPIKey
 
 @admin.action(description="Log these MPs' names")
 def log_name(self, request, queryset):
+        MPcount = queryset.count()
         for mp in queryset:
             print(mp.name)
+        
+        apify_link = format_html('<a href="https://console.apify.com/" target="_blank">Apify</a>')
+        
+        self.message_user(
+            request,
+            mark_safe("{} MPs' tweets are being scraped. Click here to monitor the run: {}".format(MPcount, apify_link)),
+            messages.SUCCESS,
+        )
+        
 
 class MPAdmin(admin.ModelAdmin):
     list_display = ('name', 'twitter_handle', 'tweets_last_scraped_days_ago')
