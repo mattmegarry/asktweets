@@ -7,6 +7,7 @@ class MPAdmin(admin.ModelAdmin):
     readonly_fields = ('tweets_last_scraped',)
     list_per_page = 700
     search_fields = ('name',)
+    ordering = ('name',)
 
 admin.site.register(MP, MPAdmin)
 admin.site.register(Party)
