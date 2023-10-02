@@ -20,3 +20,12 @@ class MP(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Tweet(models.Model):
+    twitter_tweet_id = models.CharField(max_length=255, unique=True, blank=False, null=False)
+    tweet_text = models.CharField(max_length=280, blank=False, null=False)
+    tweet_date = models.DateTimeField(blank=False, null=False)
+    mp = models.ForeignKey(MP, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.tweet_text[:50]
