@@ -29,3 +29,25 @@ class Tweet(models.Model):
 
     def __str__(self):
         return self.tweet_text[:50]
+
+class ClaudeAPIKey(models.Model):
+    value = models.CharField(max_length=1000, unique=True, blank=False, null=False)
+
+    class Meta:
+        verbose_name = "Claude API Key"
+        verbose_name_plural = "Claude API Key"
+
+    def __str__(self):
+        return "Claude API Key"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        self.__class__.objects.exclude(pk=1).delete()
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
+    
+
