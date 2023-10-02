@@ -1,12 +1,20 @@
 from django.contrib import admin, messages
 from django.utils.html import format_html, mark_safe
 from .models import MP, Party, Tweet, ClaudeAPIKey, ApifyAPIKey
+from .scraper import scrape_tweets
 
-@admin.action(description="Log these MPs' names")
-def log_name(self, request, queryset):
+@admin.action(description="Scrape the selected MPs' tweets")
+def initiate_tweet_scrape(self, request, queryset):
+        if ApifyAPIKey.load().value is None:
+            self.message_user(
+                request,
+                "Please enter an Apify API key in the admin panel.",
+                messages.ERROR,
+            )
+            return
+        
         MPcount = queryset.count()
-        for mp in queryset:
-            print(mp.name)
+        scrape_tweets(request, queryset)
         
         apify_link = format_html('<a href="https://console.apify.com/" target="_blank">Apify</a>')
         
@@ -23,7 +31,7 @@ class MPAdmin(admin.ModelAdmin):
     list_per_page = 700
     search_fields = ('name',)
     ordering = ('name',)
-    actions = [log_name]
+    actions = [initiate_tweet_scrape]
 
 admin.site.register(MP, MPAdmin)
 admin.site.register(Party)
