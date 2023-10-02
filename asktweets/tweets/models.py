@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Party(models.Model):
     name = models.CharField(max_length=255, unique=True, blank=False, null=False)
@@ -14,12 +15,20 @@ class MP(models.Model):
     party = models.ForeignKey(Party, on_delete=models.SET_NULL, null=True)
     constituency = models.CharField(max_length=600, null=True, blank=True)
     twitter_handle = models.CharField(max_length=255, null=True, blank=True)
+    tweets_last_scraped = models.DateTimeField(null=True)
 
     class Meta:
         verbose_name_plural = "MPs"
 
     def __str__(self):
         return self.name
+    
+    def tweets_last_scraped_days_ago(self):
+        now = timezone.now()
+        if self.tweets_last_scraped is None:
+            return None
+        delta = now - self.tweets_last_scraped
+        return delta.days
     
 class Tweet(models.Model):
     twitter_tweet_id = models.CharField(max_length=255, unique=True, blank=False, null=False)
