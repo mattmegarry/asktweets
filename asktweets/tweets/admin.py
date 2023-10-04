@@ -1,20 +1,35 @@
 from django.contrib import admin, messages
 from django.utils.html import format_html, mark_safe
 from .models import MP, Party, Tweet, ClaudeAPIKey, ApifyAPIKey
-from .scraper import scrape_tweets
+from .scraper import start_scraper_run
+from django.db.models import Q
 
 @admin.action(description="Scrape the selected MPs' tweets")
 def initiate_tweet_scrape(self, request, queryset):
+        print(type(self))
+        errors = False
         if ApifyAPIKey.load().value is None:
             self.message_user(
                 request,
                 "Please enter an Apify API key in the admin panel.",
                 messages.ERROR,
             )
-            return
+            errors = True
         
+        any_twitter_handle_null = queryset.filter(Q(**{'twitter_handle__isnull': True}) | Q(**{'twitter_handle':''})).exists()
+        if any_twitter_handle_null:
+            self.message_user(
+                request,
+                "One or more of the selected MPs does not have a Twitter handle.",
+                messages.ERROR,
+            )
+            errors = True
+        
+        if errors:
+            return
+
         MPcount = queryset.count()
-        scrape_tweets(request, queryset)
+        start_scraper_run(request, queryset)
         
         apify_link = format_html('<a href="https://console.apify.com/" target="_blank">Apify</a>')
         

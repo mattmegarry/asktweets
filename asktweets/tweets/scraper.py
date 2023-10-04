@@ -1,29 +1,31 @@
 from django.contrib import admin, messages
 from .models import ApifyAPIKey
+from apify_client import ApifyClient
 
-def scrape_tweets(request, MPqueryset):
+def start_scraper_run(request, MPqueryset):
     print(MPqueryset)
-    from apify_client import ApifyClient
 
-    # Initialize the ApifyClient with your API token
-    client = ApifyClient("<YOUR_API_TOKEN>")
+    token=ApifyAPIKey.load().value
+    client = ApifyClient(token)
 
-    # Prepare the Actor input
     run_input = {
-        "max_tweets": 500,
+        "max_tweets": 5,
         "language": "any",
         "collect_user_info": False,
         "use_experimental_scraper": False,
         "user_info": "user info and replying info",
         "max_attempts": 5,
+        "from_user": [
+        "tomorrowsmps"
+        ],
     }
 
-    # Run the Actor and wait for it to finish
-    run = client.actor("44jFjuTNajCxx2PrD/3ZnxsHgu9XSzTgDcu").call(run_input=run_input)
+    run = client.actor("shanes~tweet-flash-plus").start(run_input=run_input)
+    print(run)
 
-    # Run the Actor asynchronously
-    
-
+def get_run_data(run_id):  
     # Fetch and print Actor results from the run's dataset (if there are any)
+    client = ApifyClient()
+    run = client.run(run_id)
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
         print(item)
