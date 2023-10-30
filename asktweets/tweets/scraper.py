@@ -23,9 +23,9 @@ def start_scraper_run(request, MPqueryset):
     run = client.actor("shanes~tweet-flash-plus").start(run_input=run_input)
     print(run)
 
-def get_run_data(run_id):  
-    # Fetch and print Actor results from the run's dataset (if there are any)
-    client = ApifyClient()
+def get_run_data(run_id):
+    token=ApifyAPIKey.load().value
+    client = ApifyClient(token)
     run = client.run(run_id)
     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
         print(item)
